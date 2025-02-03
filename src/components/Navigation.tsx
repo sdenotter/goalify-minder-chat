@@ -1,4 +1,4 @@
-import { MessageSquare, Target } from "lucide-react";
+import { History, MessageSquare, Target } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
@@ -8,6 +8,7 @@ export const Navigation = () => {
   const links = [
     { to: "/", icon: MessageSquare, label: "Chat" },
     { to: "/tasks", icon: Target, label: "Tasks" },
+    { to: "/history", icon: History, label: "History" },
   ];
 
   return (
