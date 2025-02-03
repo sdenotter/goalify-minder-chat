@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
-import { Target } from "lucide-react";
+import { Target, ChevronLeft, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 
 const initialTasks = [
@@ -38,6 +38,8 @@ const initialTasks = [
 const Tasks = () => {
   const [tasks, setTasks] = useState(initialTasks);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [currentPage, setCurrentPage] = useState(1);
+  const tasksPerPage = 5;
 
   const toggleTaskCompletion = (taskId: number) => {
     setTasks((prevTasks) =>
@@ -50,6 +52,19 @@ const Tasks = () => {
   const filteredTasks = tasks.filter(
     (task) => format(task.date, "yyyy-MM-dd") === format(selectedDate, "yyyy-MM-dd")
   );
+
+  const totalPages = Math.ceil(filteredTasks.length / tasksPerPage);
+  const startIndex = (currentPage - 1) * tasksPerPage;
+  const endIndex = startIndex + tasksPerPage;
+  const currentTasks = filteredTasks.slice(startIndex, endIndex);
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
 
   return (
     <div className="min-h-screen p-4 pb-32">
@@ -68,12 +83,12 @@ const Tasks = () => {
               Tasks for {format(selectedDate, "MMMM d, yyyy")}
             </h2>
             <div className="space-y-4">
-              {filteredTasks.length === 0 ? (
+              {currentTasks.length === 0 ? (
                 <p className="text-center text-sm text-muted-foreground">
                   No tasks for this day
                 </p>
               ) : (
-                filteredTasks.map((task) => (
+                currentTasks.map((task) => (
                   <div
                     key={task.id}
                     className="flex items-start gap-3 rounded-lg border p-4"
@@ -106,6 +121,27 @@ const Tasks = () => {
                 ))
               )}
             </div>
+            {filteredTasks.length > tasksPerPage && (
+              <div className="mt-4 flex items-center justify-center gap-4">
+                <button
+                  onClick={handlePreviousPage}
+                  disabled={currentPage === 1}
+                  className="inline-flex items-center justify-center rounded-md p-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+                <span className="text-sm text-muted-foreground">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                  className="inline-flex items-center justify-center rounded-md p-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            )}
           </Card>
 
           <Card className="p-6">
