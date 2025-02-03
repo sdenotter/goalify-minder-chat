@@ -4,8 +4,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer } from "recharts";
-import { format, startOfToday, subDays } from "date-fns";
+import { BarChart, Bar, XAxis, YAxis } from "recharts";
+import { format, startOfToday, subDays, addDays } from "date-fns";
 import { History as HistoryIcon } from "lucide-react";
 
 const History = () => {
